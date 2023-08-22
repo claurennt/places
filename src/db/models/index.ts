@@ -1,6 +1,7 @@
 import { Schema, model, ObjectId } from 'mongoose';
 
 export interface IPlace {
+  _id: ObjectId;
   name: string;
   location: string;
   coordinates: number[];
@@ -26,6 +27,7 @@ const placeSchema = new Schema<IPlace>({
 });
 
 export interface IUser {
+  _id: ObjectId;
   username: string;
   email: string;
   password: String;
@@ -35,8 +37,8 @@ export interface IUser {
 
 // 2. Create a Schema corresponding to the document interface.
 const userSchema = new Schema<IUser>({
-  username: { type: String, required: true },
-  email: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String, required: true },
   places: [{ type: Schema.Types.ObjectId, ref: 'Place' }],

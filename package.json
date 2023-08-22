@@ -20,6 +20,8 @@
     "typescript": "^5.1.6"
   },
   "devDependencies": {
+    "@graphql-tools/merge": "^9.0.0",
+    "@graphql-tools/schema": "^10.0.0",
     "@types/express": "^4.17.17",
     "dotenv": "^16.2.0",
     "nodemon": "^2.0.15",

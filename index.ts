@@ -5,9 +5,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import sanitizedConfig from './config.js';
-import './db/connect.js';
+import './src/db/connect.js';
 
-import { rootValue, schema } from './gql/index.js';
+import { rootValue, schema } from './src/index.js';
 
 const { PORT } = sanitizedConfig;
 
