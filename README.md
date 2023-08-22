@@ -1,4 +1,4 @@
-**This is a work on progress**
+**This is a work in progress**
 
 # Places App
 
