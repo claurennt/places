@@ -1,11 +1,12 @@
-import { mergeTypeDefs } from '@graphql-tools/merge';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { createUser, deleteUser, usersTypes } from './users/index.js';
-import { placesTypes } from './places/index.js';
+import { usersMutations, usersQueries, usersTypes } from './users/index.js';
+import { placesMutations, placesQueries, placesTypes } from './places/index.js';
 
 export const rootValue = {
-  createUser,
-  deleteUser,
+  ...usersMutations,
+  ...usersQueries,
+  ...placesMutations,
+  ...placesQueries,
 };
 
 const typeDefs = `

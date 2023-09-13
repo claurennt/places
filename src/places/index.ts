@@ -1,3 +1,3 @@
-export * from './mutations.js';
-export * from './queries.js';
-export { placesTypes } from './types.js';
+export * as placesMutations from './mutations.js';
+export * as placesQueries from './queries.js';
+export * from './types.js';

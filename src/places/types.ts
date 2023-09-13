@@ -6,7 +6,7 @@ type Query {
 }
 
 type Mutation {
-    createPlace(input: PlaceInput): Place
+    createPlace(_userId:String!, input: PlaceInput): Place
     updatePlace(_id:String!, input: PlaceInput): Place
     deletePlace(_id:String!): Place
 }
@@ -14,18 +14,18 @@ type Mutation {
 type Place {
   _id:String
   name: String
-  location: String
-  coordinates: [Int]
+  coordinates: [Float]
+  city:String
   color: String
   type: String
   users:[User]
 }
 
 input PlaceInput {
-  _id:String!
   name: String
-  location: String
-  coordinates: [Int]
+  coordinates: [Float]
+  city:String
+  country:String
   color: String
   type: String
   users:[UserInput]

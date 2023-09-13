@@ -1,3 +1,3 @@
-export * from './mutations.js';
-export * from './queries.js';
+export * as usersMutations from './mutations.js';
+export * as usersQueries from './queries.js';
 export * from './types.js';

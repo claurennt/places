@@ -3,8 +3,9 @@ import { Schema, model, ObjectId } from 'mongoose';
 export interface IPlace {
   _id: ObjectId;
   name: string;
-  location: string;
   coordinates: number[];
+  city: string;
+  country: string;
   color: string;
   type: string | string[];
   users: [ObjectId];
@@ -12,15 +13,14 @@ export interface IPlace {
 
 const placeSchema = new Schema<IPlace>({
   name: String,
-  location: {
-    type: String,
-    enum: ['Point'],
-    required: true,
-  },
   coordinates: {
     type: [Number],
+    index: '2d',
+    default: [0, 0],
     required: true,
   },
+  city: String,
+  country: String,
   color: String,
   type: String || [String],
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
