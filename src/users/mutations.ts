@@ -1,4 +1,6 @@
-import { Place, IPlace, User, IUser } from '../db/index.js';
+import { User, IUser, IPlace } from '../db/index.js';
+import { checkDocumentExistence } from '../helpers/users.js';
+import { createPlace } from '../places/mutations.js';
 
 export const createUser = async (args: {
   input: IUser;
@@ -27,16 +29,13 @@ export const createUser = async (args: {
   }
 };
 
-// export const findAllUsers=
-
 export const deleteUser = async (args: {
   _id: IUser['_id'];
 }): Promise<IUser | string | Error> => {
   try {
     const { _id } = args;
-    console.log(_id);
-    const deletedUser: IUser = await User.findByIdAndDelete(_id);
-    console.log(deletedUser);
+
+    const deletedUser: IUser | null = await User.findByIdAndDelete(_id);
 
     if (!deletedUser)
       return `User deletion failed: no user found with _id ${_id}`;
