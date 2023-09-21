@@ -22,6 +22,6 @@ The Places app is built using the following technologies:
 
 - **Backend**: TypeScript, Express.js, GraphQL
 
-- **Database**: MongoDB (or specify your chosen database)
+- **Database**: MongoDB
 
 
