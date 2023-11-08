@@ -5,10 +5,11 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import sanitizedConfig from './config.js';
+
 import './src/db/connect.js';
 
 import { rootValue, schema } from './src/index.js';
-//console.log(schema);
+
 const { PORT } = sanitizedConfig;
 
 const app = express();
