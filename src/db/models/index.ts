@@ -1,32 +1,64 @@
-import { Schema, model, ObjectId } from 'mongoose';
+import { Schema, model, ObjectId, Document } from 'mongoose';
 
-export interface IPlace {
+export interface IPlace extends Document {
   _id: ObjectId;
   name: string;
   coordinates: number[];
-  city: string;
-  country: string;
-  color: string;
-  type: string | string[];
-  users: [ObjectId];
+  address: {
+    road: string;
+    town: string;
+    county?: string;
+    state: string;
+    postcode: string;
+    country: string;
+  };
+  icon: String;
+  color?: string;
+  type?: string | string[];
+  users?: [ObjectId];
 }
 
 const placeSchema = new Schema<IPlace>({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+  },
   coordinates: {
     type: [Number],
     index: '2d',
     default: [0, 0],
     required: true,
   },
-  city: String,
-  country: String,
+  address: {
+    road: {
+      type: String,
+    },
+    town: {
+      type: String,
+      required: true,
+    },
+    county: {
+      type: String,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+    postcode: {
+      type: String,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+  },
+  icon: String,
   color: String,
   type: String || [String],
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
-export interface IUser {
+export interface IUser extends Document {
   _id: ObjectId;
   username: string;
   email: string;
@@ -40,7 +72,7 @@ const userSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  avatar: { type: String, required: true },
+  avatar: { type: String, default: '' },
   places: [{ type: Schema.Types.ObjectId, ref: 'Place' }],
 });
 
