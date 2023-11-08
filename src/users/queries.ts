@@ -1,17 +1,27 @@
 import { User, IUser, IPlace } from '../db/index.js';
-import { checkDocumentExistence } from '../helpers/users.js';
+import { checkDocumentExistence } from '../helpers/index.js';
+
+type UserPublicData = {
+  username: string;
+  avatar: string;
+};
 
 export const getUser = async (args: {
   _id: IUser['_id'];
-}): Promise<IUser | string | Error | null> => {
+}): Promise<IUser | UserPublicData | string | Error> => {
   try {
     const { _id } = args;
 
-    const foundUser = checkDocumentExistence(_id, User);
+    const foundUser = await checkDocumentExistence(_id, User);
+
     if (!foundUser)
       return `User not found: a user with _id "${_id}" does not exist.`;
 
-    return foundUser;
+    const { username, avatar } = foundUser;
+
+    // TODO: return all data from currently authenticated user
+
+    return { username, avatar };
   } catch (err) {
     console.log(err);
 
@@ -19,20 +29,29 @@ export const getUser = async (args: {
   }
 };
 
-export const getUsersByPlaceCity = async (args: {
-  placeCity: IPlace['city'];
-}): Promise<IUser[] | string | Error> => {
+export const getUsersByPlaceTown = async (args: {
+  placeTown: IPlace['address']['town'];
+}): Promise<IUser[] | UserPublicData[] | string | Error> => {
   try {
-    const { placeCity: city } = args;
+    const { placeTown: town } = args;
 
-    const foundUser: IUser[] | null = await User.find().populate({
+    // retrieve the users whose referenced place document match the city's argument passed to the query
+    const foundUsers: IUser[] | null = await User.find().populate({
       path: 'places',
-      match: { city },
+      match: { address: { town } },
     });
 
-    if (!foundUser.length) return `No users found w`;
+    if (!foundUsers.length)
+      return `No users found with places saved in town '${town}'`;
 
-    return foundUser;
+    const foundUsersPublicData = foundUsers.map(({ username, avatar }) => ({
+      username,
+      avatar,
+    }));
+
+    // TODO: return all data from currently authenticated user
+
+    return foundUsersPublicData;
   } catch (err) {
     console.log(err);
 

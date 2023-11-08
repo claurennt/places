@@ -1,8 +1,9 @@
+// in graphql the resolvers' names must match the names in their types definitions
 export const placesTypes = `
 
 type Query {
-    places:[Place]
-    place(_id:String!):Place
+    getPlaces:[Place]
+    getPlace(_id:String!):Place
 }
 
 type Mutation {
@@ -11,24 +12,31 @@ type Mutation {
     deletePlace(_id:String!): Place
 }
   
+type Address {
+  road: String
+  town: String
+  county: String
+  state: String
+  postcode: String
+  country: String
+}
+
 type Place {
-  _id:String
+  _id: String
   name: String
   coordinates: [Float]
-  city:String
+  address: Address  
+  icon: String
   color: String
   type: String
-  users:[User]
+  users: [User]
 }
+
 
 input PlaceInput {
   name: String
-  coordinates: [Float]
-  city:String
-  country:String
-  color: String
-  type: String
-  users:[UserInput]
+  town: String!
+  country: String
 }
 
 `;
