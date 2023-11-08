@@ -1,22 +1,27 @@
-import { User, IUser, IPlace } from '../db/index.js';
-import { checkDocumentExistence } from '../helpers/users.js';
-import { createPlace } from '../places/mutations.js';
+import { GraphQLError } from 'graphql';
+import { User, IUser } from '../db/index.js';
+import { hashPassword } from '../helpers/index.js';
 
 export const createUser = async (args: {
-  input: IUser;
-}): Promise<IUser | Error> => {
+  input: Omit<IUser, 'places'>;
+}): Promise<Partial<IUser> | Error> => {
   try {
-    const { username, avatar, password, email, places } = args.input;
+    const { username, avatar, password, email } = args.input;
 
-    const newUser: IUser = await User.create({
+    const hashedPassword = await hashPassword(password);
+
+    await User.create({
       username,
       avatar,
-      password,
+      password: hashedPassword,
       email,
-      places,
     });
 
-    return newUser;
+    return {
+      username,
+      avatar,
+      email,
+    };
   } catch (err) {
     if (err.name === 'MongoServerError' && err.code === 11000) {
       const [[key, value]] = Object.entries(err.keyValue);
@@ -31,19 +36,25 @@ export const createUser = async (args: {
 
 export const deleteUser = async (args: {
   _id: IUser['_id'];
-}): Promise<IUser | string | Error> => {
+}): Promise<Partial<IUser> | Error> => {
   try {
     const { _id } = args;
 
     const deletedUser: IUser | null = await User.findByIdAndDelete(_id);
 
-    if (!deletedUser)
-      return `User deletion failed: no user found with _id ${_id}`;
+    if (!deletedUser) {
+      return new Error(`User deletion failed: no user found with _id ${_id}`);
+    }
+    const { username, avatar, email } = deletedUser;
 
-    return deletedUser;
+    return {
+      username,
+      avatar,
+      email,
+    };
   } catch (err) {
-    console.log(err);
-
     return err;
   }
 };
+
+// TODO: updateUser resolver
