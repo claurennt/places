@@ -1,5 +1,5 @@
-import { User, IUser, IPlace } from '../db/index';
-import { checkDocumentExistence } from '../helpers/index';
+import { User, IUser, IPlace } from '@db';
+import { ApiError, checkDocumentExistence } from '@helpers';
 
 type UserPublicData = {
   username: string;
@@ -8,11 +8,11 @@ type UserPublicData = {
 
 export const getUser = async (args: {
   _id: IUser['_id'];
-}): Promise<IUser | UserPublicData | string | Error> => {
+}): Promise<IUser | UserPublicData | string> => {
   try {
     const { _id } = args;
 
-    const foundUser = await checkDocumentExistence(_id, User);
+    const foundUser = await checkDocumentExistence<IUser>(_id, User);
 
     if (!foundUser)
       return `User not found: a user with _id "${_id}" does not exist.`;
@@ -22,10 +22,8 @@ export const getUser = async (args: {
     // TODO: return all data from currently authenticated user
 
     return { username, avatar };
-  } catch (err) {
-    console.log(err);
-
-    return err as Error;
+  } catch (error) {
+    throw new ApiError(error);
   }
 };
 
@@ -52,9 +50,7 @@ export const getUsersByPlaceTown = async (args: {
     // TODO: return all data from currently authenticated user
 
     return foundUsersPublicData;
-  } catch (err) {
-    console.log(err);
-
-    return err as Error;
+  } catch (error) {
+    throw new ApiError(error);
   }
 };

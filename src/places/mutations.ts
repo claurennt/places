@@ -1,13 +1,12 @@
 import axios from 'axios';
-import { IPlace, IUser, Place, User } from '../db/index';
-import { checkDocumentExistence } from '../helpers/index';
-import { placeIconMap } from '../helpers/index';
-import mongoose from 'mongoose';
+import { IPlace, IUser, Place, User } from '@db';
+
+import { ApiError, placeIconMap, checkDocumentExistence } from '@helpers';
 
 export const createPlace = async (args: {
   _userId: IUser['_id'];
   input: { name?: string; town: string; country: string };
-}): Promise<Error | IPlace> => {
+}): Promise<IPlace> => {
   try {
     const {
       name: inputName,
@@ -17,14 +16,14 @@ export const createPlace = async (args: {
 
     const { _userId } = args;
 
-    const user = await checkDocumentExistence(_userId, User);
+    const user = await checkDocumentExistence<IUser>(_userId, User);
 
     if (!user) {
-      return new Error('User not found');
+      throw new Error('User not found');
     }
 
     if (!inputTown || (!inputName && !inputTown))
-      return new Error('Please provide city name');
+      throw new Error('Please provide city name');
 
     // send a request to retrieve more information about the place
     const encodedNameParameter = encodeURIComponent(inputName || '');
@@ -67,18 +66,7 @@ export const createPlace = async (args: {
     await user.save();
 
     return newPlace;
-  } catch (err) {
-    if (
-      err instanceof mongoose.mongo.MongoError &&
-      err.name === 'MongoServerError' &&
-      err.code === 11000
-    ) {
-      const [[key, value]] = Object.entries((err as any).keyValue);
-
-      return new Error(
-        `User creation failed: ${key} '${value}' already exists.`
-      );
-    }
-    return err as Error;
+  } catch (error) {
+    throw new ApiError(error);
   }
 };

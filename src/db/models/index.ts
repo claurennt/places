@@ -12,7 +12,7 @@ export interface IPlace extends Document {
     postcode: string;
     country: string;
   };
-  icon: String;
+  icon: string;
   color?: string;
   type?: string | string[];
   users?: [ObjectId];
