@@ -1,6 +1,6 @@
-import { GraphQLError } from 'graphql';
-import { User, IUser } from '../db/index.js';
-import { hashPassword } from '../helpers/index.js';
+import { User, IUser } from '../db/index';
+import { hashPassword } from '../helpers/index';
+import mongoose from 'mongoose';
 
 export const createUser = async (args: {
   input: Omit<IUser, 'places'>;
@@ -23,14 +23,18 @@ export const createUser = async (args: {
       email,
     };
   } catch (err) {
-    if (err.name === 'MongoServerError' && err.code === 11000) {
-      const [[key, value]] = Object.entries(err.keyValue);
+    if (
+      err instanceof mongoose.mongo.MongoError &&
+      err.name === 'MongoServerError' &&
+      err.code === 11000
+    ) {
+      const [[key, value]] = Object.entries((err as any).keyValue);
 
       return new Error(
         `User creation failed: ${key} '${value}' already exists.`
       );
     }
-    return err;
+    return err as Error;
   }
 };
 
@@ -53,7 +57,7 @@ export const deleteUser = async (args: {
       email,
     };
   } catch (err) {
-    return err;
+    return err as Error;
   }
 };
 

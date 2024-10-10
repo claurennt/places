@@ -1,17 +1,30 @@
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import { usersMutations, usersQueries, usersTypes } from './users/index.js';
-import { placesMutations, placesQueries, placesTypes } from './places/index.js';
+import express from 'express';
+import { graphqlHTTP } from 'express-graphql';
 
-export const rootValue = {
-  ...usersMutations,
-  ...usersQueries,
-  ...placesMutations,
-  ...placesQueries,
-};
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-const typeDefs = `
-${usersTypes}
-${placesTypes}
-`;
+import sanitizedConfig from './config';
 
-export const schema = makeExecutableSchema({ typeDefs });
+import './db/connect';
+
+import { rootValue, schema } from './schema';
+
+const { PORT } = sanitizedConfig;
+
+const app = express();
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema,
+    rootValue,
+    graphiql: true,
+  })
+);
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`);
+});
+
+console.log(`Running a GraphQL API server at http://localhost:${PORT}/graphql`);

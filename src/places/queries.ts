@@ -1,5 +1,5 @@
-import { Place, IPlace } from '../db/index.js';
-import { checkDocumentExistence } from '../helpers/index.js';
+import { Place, IPlace } from '../db/index';
+import { checkDocumentExistence } from '../helpers/index';
 
 export const getPlace = async (args: {
   _id: IPlace['_id'];
@@ -15,7 +15,7 @@ export const getPlace = async (args: {
   } catch (err) {
     console.log(err);
 
-    return err;
+    return err as Error;
   }
 };
 

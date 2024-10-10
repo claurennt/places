@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import sanitizedConfig from '../../config.js';
+import sanitizedConfig from '../config';
 
 mongoose
   .connect(sanitizedConfig.MONGODB_CONNECTION_STRING)
