@@ -22,7 +22,7 @@ export const createUser = async (args: {
       email,
     };
   } catch (error) {
-    throw new ApiError(error);
+    throw new ApiError(error as any);
   }
 };
 
@@ -45,7 +45,7 @@ export const deleteUser = async (args: {
       email,
     };
   } catch (error) {
-    throw new ApiError(error);
+    throw new ApiError(error as any);
   }
 };
 

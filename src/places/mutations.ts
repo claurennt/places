@@ -67,6 +67,6 @@ export const createPlace = async (args: {
 
     return newPlace;
   } catch (error) {
-    throw new ApiError(error);
+    throw new ApiError(error as any);
   }
 };
