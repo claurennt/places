@@ -34,7 +34,7 @@ export const getUsersByPlaceTown = async (args: {
     const { placeTown: town } = args;
 
     // retrieve the users whose referenced place document match the city's argument passed to the query
-    const foundUsers: IUser[] | null = await User.find().populate({
+    const foundUsers: IUser[] = await User.find().populate({
       path: 'places',
       match: { address: { town } },
     });
