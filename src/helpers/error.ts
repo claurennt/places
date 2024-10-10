@@ -10,7 +10,7 @@ const isMongoServerError = (
 export class ApiError extends Error {
   cause?: Error;
 
-  constructor(error: unknown) {
+  constructor(error: MongoServerError | Error) {
     let message = 'Something went wrong';
 
     if (isMongoServerError(error)) {

@@ -14,7 +14,7 @@ export const getPlace = async (args: {
 
     return foundPlace;
   } catch (error) {
-    throw new ApiError(error);
+    throw new ApiError(error as any);
   }
 };
 

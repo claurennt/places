@@ -23,7 +23,7 @@ export const getUser = async (args: {
 
     return { username, avatar };
   } catch (error) {
-    throw new ApiError(error);
+    throw new ApiError(error as any);
   }
 };
 
@@ -51,6 +51,6 @@ export const getUsersByPlaceTown = async (args: {
 
     return foundUsersPublicData;
   } catch (error) {
-    throw new ApiError(error);
+    throw new ApiError(error as any);
   }
 };
