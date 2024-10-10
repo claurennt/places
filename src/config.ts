@@ -1,18 +1,3 @@
-import path from 'path';
-import dotenv from 'dotenv';
-
-import { fileURLToPath } from 'url';
-
-// const __filename = fileURLToPath(import.meta.url);
-
-// const __dirname = path.dirname(__filename);
-// Parsing the env file.
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-// Interface to load env variables
-// Note these variables can possibly be undefined
-// as someone could skip these varibales or not setup a .env file at all
-
 interface ENV {
   PORT: number | string;
   MONGODB_CONNECTION_STRING: string;

@@ -1,21 +1,20 @@
-import { Place, IPlace } from '../db/index';
-import { checkDocumentExistence } from '../helpers/index';
+import { Place, IPlace } from '@db';
+
+import { ApiError, checkDocumentExistence } from '@helpers';
 
 export const getPlace = async (args: {
   _id: IPlace['_id'];
-}): Promise<IPlace | string | Error | null> => {
+}): Promise<IPlace | string> => {
   try {
     const { _id } = args;
 
-    const foundPlace = checkDocumentExistence(_id, Place);
+    const foundPlace = await checkDocumentExistence<IPlace>(_id, Place);
     if (!foundPlace)
       return `Place not found: a place with _id "${_id}" does not exist.`;
 
     return foundPlace;
-  } catch (err) {
-    console.log(err);
-
-    return err as Error;
+  } catch (error) {
+    throw new ApiError(error);
   }
 };
 

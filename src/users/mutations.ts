@@ -1,6 +1,5 @@
-import { User, IUser } from '../db/index';
-import { hashPassword } from '../helpers/index';
-import mongoose from 'mongoose';
+import { User, IUser } from '@db';
+import { hashPassword, ApiError } from '@helpers';
 
 export const createUser = async (args: {
   input: Omit<IUser, 'places'>;
@@ -22,19 +21,8 @@ export const createUser = async (args: {
       avatar,
       email,
     };
-  } catch (err) {
-    if (
-      err instanceof mongoose.mongo.MongoError &&
-      err.name === 'MongoServerError' &&
-      err.code === 11000
-    ) {
-      const [[key, value]] = Object.entries((err as any).keyValue);
-
-      return new Error(
-        `User creation failed: ${key} '${value}' already exists.`
-      );
-    }
-    return err as Error;
+  } catch (error) {
+    throw new ApiError(error);
   }
 };
 
@@ -56,8 +44,8 @@ export const deleteUser = async (args: {
       avatar,
       email,
     };
-  } catch (err) {
-    return err as Error;
+  } catch (error) {
+    throw new ApiError(error);
   }
 };
 
