@@ -11,7 +11,7 @@ export const checkDocumentExistence = async <T extends IUser | IPlace>(
   return foundDocument;
 };
 
-export const hashPassword = async (password) => {
+export const hashPassword = async (password: string) => {
   const hashedPassword = bcrypt.hash(password, 10);
   return hashedPassword;
 };

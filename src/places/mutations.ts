@@ -1,12 +1,13 @@
 import axios from 'axios';
-import { IPlace, IUser, Place, User } from '../db/index.js';
-import { checkDocumentExistence } from '../helpers/index.js';
-import { placeIconMap } from '../helpers/index.js';
+import { IPlace, IUser, Place, User } from '../db/index';
+import { checkDocumentExistence } from '../helpers/index';
+import { placeIconMap } from '../helpers/index';
+import mongoose from 'mongoose';
 
 export const createPlace = async (args: {
   _userId: IUser['_id'];
   input: { name?: string; town: string; country: string };
-}): Promise<IPlace | Error> => {
+}): Promise<Error | IPlace> => {
   try {
     const {
       name: inputName,
@@ -67,13 +68,17 @@ export const createPlace = async (args: {
 
     return newPlace;
   } catch (err) {
-    if (err.name === 'MongoServerError' && err.code === 11000) {
-      const [[key, value]] = Object.entries(err.keyValue);
+    if (
+      err instanceof mongoose.mongo.MongoError &&
+      err.name === 'MongoServerError' &&
+      err.code === 11000
+    ) {
+      const [[key, value]] = Object.entries((err as any).keyValue);
 
       return new Error(
         `User creation failed: ${key} '${value}' already exists.`
       );
     }
-    return err;
+    return err as Error;
   }
 };

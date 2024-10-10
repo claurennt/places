@@ -62,7 +62,7 @@ export interface IUser extends Document {
   _id: ObjectId;
   username: string;
   email: string;
-  password: String;
+  password: string;
   avatar: string;
   places: [ObjectId];
 }

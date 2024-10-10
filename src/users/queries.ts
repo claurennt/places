@@ -1,5 +1,5 @@
-import { User, IUser, IPlace } from '../db/index.js';
-import { checkDocumentExistence } from '../helpers/index.js';
+import { User, IUser, IPlace } from '../db/index';
+import { checkDocumentExistence } from '../helpers/index';
 
 type UserPublicData = {
   username: string;
@@ -25,7 +25,7 @@ export const getUser = async (args: {
   } catch (err) {
     console.log(err);
 
-    return err;
+    return err as Error;
   }
 };
 
@@ -55,6 +55,6 @@ export const getUsersByPlaceTown = async (args: {
   } catch (err) {
     console.log(err);
 
-    return err;
+    return err as Error;
   }
 };
