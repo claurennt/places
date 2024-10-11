@@ -2,10 +2,12 @@ import { User, IUser } from '@db';
 import { hashPassword, ApiError } from '@helpers';
 
 export const createUser = async (args: {
-  input: Omit<IUser, 'places'>;
-}): Promise<Partial<IUser> | Error> => {
+  data: Omit<IUser, 'places'>;
+}): Promise<Partial<IUser> | Error | undefined> => {
   try {
-    const { username, avatar, password, email } = args.input;
+    const {
+      data: { username, avatar, password, email },
+    } = args;
 
     const hashedPassword = await hashPassword(password);
 
@@ -22,17 +24,19 @@ export const createUser = async (args: {
       email,
     };
   } catch (error) {
-    throw new ApiError(error as any);
+    if (error instanceof Error) {
+      throw new ApiError(error);
+    }
   }
 };
 
 export const deleteUser = async (args: {
   _id: IUser['_id'];
-}): Promise<Partial<IUser> | Error> => {
+}): Promise<Partial<IUser> | Error | undefined> => {
   try {
     const { _id } = args;
 
-    const deletedUser: IUser | null = await User.findByIdAndDelete(_id);
+    const deletedUser = await User.findByIdAndDelete(_id);
 
     if (!deletedUser) {
       return new Error(`User deletion failed: no user found with _id ${_id}`);
@@ -45,8 +49,34 @@ export const deleteUser = async (args: {
       email,
     };
   } catch (error) {
-    throw new ApiError(error as any);
+    if (error instanceof Error) {
+      throw new ApiError(error);
+    }
   }
 };
 
-// TODO: updateUser resolver
+export const updateUser = async (args: {
+  _id: IUser['_id'];
+  data: Partial<IUser>;
+}) => {
+  try {
+    const { _id, data } = args;
+
+    const updatedUser = await User.findByIdAndUpdate(_id, data);
+
+    if (!updatedUser) {
+      return new Error(`User update failed: no user found with _id ${_id}`);
+    }
+    const { username, avatar, email } = updatedUser;
+
+    return {
+      username,
+      avatar,
+      email,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new ApiError(error);
+    }
+  }
+};
