@@ -1,10 +1,21 @@
-import { Model, ObjectId } from 'mongoose';
+import mongoose, { Model, ObjectId } from 'mongoose';
 
-export const checkDocumentExistence = async <T extends { _id: ObjectId }>(
-  _id: T['_id'],
+type PlaceFilter = { town?: string; country?: string };
+
+export const checkDocumentExistence = async <
+  T extends { _id?: ObjectId; town?: string; country?: string }
+>(
+  filter: T['_id'] | PlaceFilter,
   collection: Model<T>
-): Promise<T | null> => {
-  const foundDocument = await collection.findById(_id);
+): Promise<T | null | T[]> => {
+  let foundDocuments: T | T[] | null = null;
 
-  return foundDocument;
+  if (filter instanceof mongoose.Types.ObjectId) {
+    foundDocuments = await collection.findById(filter);
+  }
+  if (filter instanceof Object) {
+    foundDocuments = await collection.find(filter);
+  }
+
+  return foundDocuments;
 };
