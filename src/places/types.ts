@@ -2,13 +2,13 @@
 export const placesTypes = `
 
 type Query {
-    getPlaces:[Place]
-    getPlace(_id:String!):Place
+    getPlacesByFilter(town:String,country:String):[Place]
+    getPlaceById(_id:String!):Place
 }
 
 type Mutation {
-    createPlace(_userId:String!, input: PlaceInput): Place
-    updatePlace(_id:String!, input: PlaceInput): Place
+    createPlace(_userId:String!, data: PlaceInput): Place
+    updatePlace(_id:String!, data: PlaceInput): Place
     deletePlace(_id:String!): Place
 }
   

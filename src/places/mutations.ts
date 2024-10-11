@@ -2,21 +2,22 @@ import axios from 'axios';
 import { IPlace, IUser, Place, User } from '@db';
 
 import { ApiError, placeIconMap, checkDocumentExistence } from '@helpers';
+import { fetchPlaceDetails, FetchPlaceResponse } from 'helpers/fetchPlace';
 
 export const createPlace = async (args: {
   _userId: IUser['_id'];
-  input: { name?: string; town: string; country: string };
-}): Promise<IPlace> => {
+  data: { name?: string; town: string; country: string };
+}): Promise<IPlace | string | undefined | FetchPlaceResponse[]> => {
   try {
     const {
       name: inputName,
       town: inputTown,
       country: inputCountry,
-    } = args.input;
+    } = args.data;
 
     const { _userId } = args;
 
-    const user = await checkDocumentExistence<IUser>(_userId, User);
+    const user = (await checkDocumentExistence<IUser>(_userId, User)) as IUser;
 
     if (!user) {
       throw new Error('User not found');
@@ -25,13 +26,10 @@ export const createPlace = async (args: {
     if (!inputTown || (!inputName && !inputTown))
       throw new Error('Please provide city name');
 
-    // send a request to retrieve more information about the place
-    const encodedNameParameter = encodeURIComponent(inputName || '');
-    const encodedCityParamenter = encodeURIComponent(inputTown || '');
-    const encodedCountryParameter = encodeURIComponent(inputCountry || '');
-
-    const { data: placeData } = await axios.get(
-      `https://nominatim.openstreetmap.org/search?addressdetails=1&q=${encodedNameParameter}+${encodedCityParamenter}+${encodedCountryParameter}&format=jsonv2&limit=20`
+    const placeData = await fetchPlaceDetails(
+      inputName,
+      inputTown,
+      inputCountry
     );
 
     // if the query has multiple results return it for the user to select the relevant one
@@ -39,20 +37,22 @@ export const createPlace = async (args: {
       return placeData;
     }
 
-    const {
-      name,
-      lat,
-      lon,
-      type,
-      address: { road, town, county, state, postcode, country },
-    } = placeData[0];
+    const [
+      {
+        name,
+        lat,
+        lon,
+        type,
+        address: { road, town, state, postcode, country },
+      },
+    ] = placeData;
 
     // create new place
     const newPlace = new Place({
       name,
       coordinates: [lat, lon],
-      address: { road, town, county, state, postcode, country },
-      icon: placeIconMap[type],
+      address: { road, town, state, postcode, country },
+      icon: placeIconMap[type as keyof typeof placeIconMap],
       color: 'lightblue',
       type,
       users: [_userId],
@@ -61,12 +61,14 @@ export const createPlace = async (args: {
     await newPlace.save();
 
     // update the User document's places property with the new Place's _id
-    user.places.push(newPlace._id);
+    (user as IUser).places.push(newPlace._id);
 
     await user.save();
 
     return newPlace;
   } catch (error) {
-    throw new ApiError(error as any);
+    if (error instanceof Error) {
+      throw new ApiError(error);
+    }
   }
 };
