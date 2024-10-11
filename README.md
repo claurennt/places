@@ -24,4 +24,6 @@ The Places app is built using the following technologies:
 
 - **Database**: MongoDB
 
+- **Builder**: Webpack
+
 
