@@ -8,7 +8,7 @@ type UserPublicData = {
 
 export const getUser = async (args: {
   _id: IUser['_id'];
-}): Promise<IUser | UserPublicData | string> => {
+}): Promise<IUser | UserPublicData | string | undefined> => {
   try {
     const { _id } = args;
 
@@ -17,19 +17,21 @@ export const getUser = async (args: {
     if (!foundUser)
       return `User not found: a user with _id "${_id}" does not exist.`;
 
-    const { username, avatar } = foundUser;
+    const { username, avatar } = foundUser as IUser;
 
     // TODO: return all data from currently authenticated user
 
     return { username, avatar };
   } catch (error) {
-    throw new ApiError(error as any);
+    if (error instanceof Error) {
+      throw new ApiError(error);
+    }
   }
 };
 
 export const getUsersByPlaceTown = async (args: {
   placeTown: IPlace['address']['town'];
-}): Promise<IUser[] | UserPublicData[] | string | Error> => {
+}): Promise<IUser[] | UserPublicData[] | string | undefined> => {
   try {
     const { placeTown: town } = args;
 
@@ -51,6 +53,8 @@ export const getUsersByPlaceTown = async (args: {
 
     return foundUsersPublicData;
   } catch (error) {
-    throw new ApiError(error as any);
+    if (error instanceof Error) {
+      throw new ApiError(error);
+    }
   }
 };

@@ -1,7 +1,5 @@
 {
-  "watch": ["."],
-  "ext": "ts",
-  "execMap": {
-    "ts": "ts-node --type-check"
-  }
+  "watch": ["dist"],
+  "ext": "js",
+  "exec": "node dist/index.js"
 }

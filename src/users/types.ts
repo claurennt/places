@@ -8,8 +8,8 @@ type Query {
 }
 
 type Mutation {
-  createUser(input: UserInput):User
-  updateUser(_id:String!, input: UserInput):User
+  createUser(data: UserInput):User
+  updateUser(_id:String!, data: UserInput):User
   addPlaceToUser(_id:String!, placeId: UserInput):User
   deleteUser(_id:String!): User
 }
