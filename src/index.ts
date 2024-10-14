@@ -1,6 +1,6 @@
 import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
-
+import { createHandler } from 'graphql-http/lib/use/express';
+import expressPlayground from 'graphql-playground-middleware-express';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -14,17 +14,16 @@ const { PORT } = sanitizedConfig;
 
 const app = express();
 
-app.use(
+app.all(
   '/graphql',
-  graphqlHTTP({
+  createHandler({
     schema,
     rootValue,
-    graphiql: true,
   })
 );
+app.get('/playground', expressPlayground({ endpoint: '/graphql' }));
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
-});
+app.listen(PORT);
 
 console.log(`Running a GraphQL API server at http://localhost:${PORT}/graphql`);
+console.log(`GraphQL playground at http://localhost:${PORT}/playground `);
