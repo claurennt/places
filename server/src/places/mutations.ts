@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { IPlace, IUser, Place, User } from '@db';
+import { IPlace, IUser, Place, User } from '../db';
 
-import { ApiError, placeIconMap, checkDocumentExistence } from '@helpers';
-import { fetchPlaceDetails, FetchPlaceResponse } from 'helpers/fetchPlace';
+import { ApiError, placeIconMap, checkDocumentExistence } from '../helpers';
+import { fetchPlaceDetails, FetchPlaceResponse } from '../helpers/fetchPlace';
 
 export const createPlace = async (args: {
   _userId: IUser['_id'];

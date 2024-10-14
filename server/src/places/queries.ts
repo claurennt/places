@@ -1,6 +1,6 @@
-import { Place, IPlace } from '@db';
+import { Place, IPlace } from '../db';
 
-import { ApiError, checkDocumentExistence } from '@helpers';
+import { ApiError, checkDocumentExistence } from '../helpers';
 
 export const getPlaceById = async (args: {
   _id: IPlace['_id'];
