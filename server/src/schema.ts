@@ -1,6 +1,6 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { usersMutations, usersQueries, usersTypes } from './users/index';
-import { placesMutations, placesQueries, placesTypes } from './places/index';
+import { usersMutations, usersQueries, usersTypes } from '@users';
+import { placesMutations, placesQueries, placesTypes } from '@places';
 
 export const rootValue = {
   ...usersMutations,

@@ -1,5 +1,5 @@
-import { User, IUser, IPlace } from '@db';
-import { ApiError, checkDocumentExistence } from '@helpers';
+import { User, IUser, IPlace } from '../db';
+import { ApiError, checkDocumentExistence } from '../helpers';
 
 type UserPublicData = {
   username: string;

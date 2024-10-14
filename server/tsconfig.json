@@ -11,7 +11,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "typeRoots": ["./global.d.ts", "./node_modules/@types"],
+    "typeRoots": ["server/src/global.d.ts", "./node_modules/@types"],
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -24,5 +24,5 @@
     }
   },
   "include": ["**/*.ts", "webpack.config.js", "webpack.config.js"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts","dist"]
 }

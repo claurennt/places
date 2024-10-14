@@ -1,5 +1,5 @@
-import { User, IUser } from '@db';
-import { hashPassword, ApiError } from '@helpers';
+import { User, IUser } from '../db';
+import { hashPassword, ApiError } from '../helpers';
 
 export const createUser = async (args: {
   data: Omit<IUser, 'places'>;
