@@ -18,7 +18,7 @@ The **Places** app is a web application that enables users to save and view thei
 
 The Places app is built using the following technologies:
 
-- **Frontend**: React, TypeScript
+- **Frontend**: Vue, TypeScript
 
 - **Backend**: TypeScript, Express.js, GraphQL
 
