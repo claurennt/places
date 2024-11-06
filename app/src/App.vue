@@ -1,25 +1,20 @@
+<script setup>
+import Globe from './components/Globe.vue'
+</script>
+
 <template>
   <div id="app">
-    <header>
-      <h1>Welcome to My Vue App</h1>
-      <nav>
-        <router-link to="/">Home</router-link>
-        <router-link to="/about">About</router-link>
-        <router-link to="/contact">Contact</router-link>
-      </nav>
-    </header>
-    <main>
-      <router-view />
-    </main>
-    <footer>
-      <p>&copy; 2024 My Vue App</p>
-    </footer>
+    <header><h1>Places</h1></header>
+    <main><Globe /></main>
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
+  components: {
+    Globe,
+  },
 }
 </script>
 
@@ -34,7 +29,6 @@ export default {
 header {
   background-color: #35495e;
   color: white;
-  padding: 20px;
 }
 
 nav a {
