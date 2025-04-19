@@ -18,5 +18,6 @@ header {
 
 body {
   background: #000012;
+  margin: unset;
 }
 </style>
